@@ -80,7 +80,7 @@ real_center = Variable(real_center)
 
 input_real.data.resize_(image.size()).copy_(image)
 input_cropped.data.resize_(image.size()).copy_(image)
-real_center_cpu = image[:,:,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2]
+real_center_cpu = image[:,:,int(opt.imageSize/4):int(opt.imageSize/4+opt.imageSize/2),int(opt.imageSize/4):int(opt.imageSize/4+opt.imageSize/2)]
 real_center.data.resize_(real_center_cpu.size()).copy_(real_center_cpu)
 
 input_cropped.data[:,0,int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred),int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred)] = 2*117.0/255.0 - 1.0
