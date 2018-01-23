@@ -63,7 +63,7 @@ image = image.repeat(1, 1, 1, 1)
 
 input_real = torch.FloatTensor(1, 3, opt.imageSize, opt.imageSize)
 input_cropped = torch.FloatTensor(1, 3, opt.imageSize, opt.imageSize)
-real_center = torch.FloatTensor(1, 3, opt.imageSize/2, opt.imageSize/2)
+real_center = torch.FloatTensor(1, 3, int(opt.imageSize/2), int(opt.imageSize/2))
 
 criterionMSE = nn.MSELoss()
 
@@ -83,15 +83,15 @@ input_cropped.data.resize_(image.size()).copy_(image)
 real_center_cpu = image[:,:,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2]
 real_center.data.resize_(real_center_cpu.size()).copy_(real_center_cpu)
 
-input_cropped.data[:,0,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred] = 2*117.0/255.0 - 1.0
-input_cropped.data[:,1,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred] = 2*104.0/255.0 - 1.0
-input_cropped.data[:,2,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred,opt.imageSize/4+opt.overlapPred:opt.imageSize/4+opt.imageSize/2-opt.overlapPred] = 2*123.0/255.0 - 1.0
+input_cropped.data[:,0,int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred),int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred)] = 2*117.0/255.0 - 1.0
+input_cropped.data[:,1,int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred),int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred)] = 2*104.0/255.0 - 1.0
+input_cropped.data[:,2,int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred),int(opt.imageSize/4+opt.overlapPred):int(opt.imageSize/4+opt.imageSize/2-opt.overlapPred)] = 2*123.0/255.0 - 1.0
 
 fake = netG(input_cropped)
 errG = criterionMSE(fake,real_center)
 
 recon_image = input_cropped.clone()
-recon_image.data[:,:,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2,opt.imageSize/4:opt.imageSize/4+opt.imageSize/2] = fake.data
+recon_image.data[:,:,int(opt.imageSize/4):int(opt.imageSize/4+opt.imageSize/2),int(opt.imageSize/4):int(opt.imageSize/4+opt.imageSize/2)] = fake.data
 
 utils.save_image('val_real_samples.png',image[0])
 utils.save_image('val_cropped_samples.png',input_cropped.data[0])
